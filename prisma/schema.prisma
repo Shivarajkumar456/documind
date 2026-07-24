@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [vector]
+}
+
+// User.id maps directly to the Neon Auth user ID (UUID from neon_auth.users).
+// We do NOT duplicate name/email here — those live in neon_auth.users.
+// This table only holds app-specific data (org membership, role).
+model User {
+  id             String        @id // same UUID as neon_auth.users.id
+  organizationId String?
+  role           Role          @default(MEMBER)
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  documents      Document[]    @relation("UploadedBy")
+  createdAt      DateTime      @default(now())
+
+  @@index([organizationId])
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model Organization {
+  id        String     @id @default(cuid())
+  name      String
+  users     User[]
+  documents Document[]
+  usageLogs UsageLog[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Document {
+  id             String       @id @default(cuid())
+  title          String
+  fileName       String
+  fileSize       Int
+  mimeType       String
+  status         DocStatus    @default(PROCESSING)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  uploadedBy     String
+  uploader       User         @relation("UploadedBy", fields: [uploadedBy], references: [id])
+  chunks         Chunk[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+}
+
+enum DocStatus {
+  PROCESSING
+  READY
+  FAILED
+}
+
+model Chunk {
+  id         String   @id @default(cuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  content    String
+  chunkIndex Int
+  embedding  Unsupported("vector(768)")? // Gemini text-embedding-004 output size
+  createdAt  DateTime @default(now())
+
+  @@index([documentId])
+}
+
+model UsageLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  type           UsageType
+  tokensUsed     Int          @default(0)
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+enum UsageType {
+  EMBEDDING
+  CHAT
+}
