@@ -12,6 +12,7 @@ export interface DocumentWithChunkCount {
 export interface ChatChunk {
   content: string;
   chunkIndex: number;
+  pageNumber: number | null;
   similarity: number;
 }
 
