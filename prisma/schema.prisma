@@ -73,7 +73,8 @@ model Chunk {
   document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
   content    String
   chunkIndex Int
-  embedding  Unsupported("vector(768)")? // Gemini text-embedding-004 output size
+  pageNumber Int?
+  embedding  Unsupported("vector(768)")? // Gemini gemini-embedding-001 output size (768 via outputDimensionality)
   createdAt  DateTime @default(now())
 
   @@index([documentId])
