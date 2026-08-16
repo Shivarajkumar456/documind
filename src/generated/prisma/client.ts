@@ -52,6 +52,11 @@ export type User = Prisma.UserModel
  */
 export type Organization = Prisma.OrganizationModel
 /**
+ * Model OrgInvite
+ * 
+ */
+export type OrgInvite = Prisma.OrgInviteModel
+/**
  * Model Document
  * 
  */

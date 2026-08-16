@@ -31,16 +31,34 @@ model User {
 enum Role {
   ADMIN
   MEMBER
+  SUPER_ADMIN
 }
 
 model Organization {
-  id        String     @id @default(cuid())
+  id        String      @id @default(cuid())
   name      String
+  isActive  Boolean     @default(true)
   users     User[]
   documents Document[]
   usageLogs UsageLog[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  invites   OrgInvite[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model OrgInvite {
+  id             String       @id @default(cuid())
+  email          String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedBy      String
+  role           Role         @default(MEMBER)
+  accepted       Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  expiresAt      DateTime
+
+  @@unique([email, organizationId])
+  @@index([organizationId])
 }
 
 model Document {

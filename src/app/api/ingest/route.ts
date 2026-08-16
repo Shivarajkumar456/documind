@@ -26,12 +26,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "documentId required" }, { status: 400 });
     }
 
-    const document = await db.document.findUnique({ where: { id: documentId } });
+    const document = await db.document.findFirst({
+      where: { id: documentId, organizationId: user.organizationId },
+    });
     if (!document) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 });
-    }
-    if (document.organizationId !== user.organizationId) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const buffer = await readUploadedFile(documentId);

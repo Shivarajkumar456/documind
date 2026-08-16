@@ -19,7 +19,7 @@ export interface ChatChunk {
 export interface OrgUser {
   id: string;
   organizationId: string;
-  role: "ADMIN" | "MEMBER";
+  role: "ADMIN" | "MEMBER" | "SUPER_ADMIN";
   organization: {
     id: string;
     name: string;

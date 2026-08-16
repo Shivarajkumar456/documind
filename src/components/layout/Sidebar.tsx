@@ -10,9 +10,18 @@ const NAV_LINKS = [
   { href: "/settings", label: "Settings" },
 ];
 
-export function Sidebar({ orgName, userName }: { orgName: string; userName: string }) {
+export function Sidebar({
+  orgName,
+  userName,
+  isSuperAdmin,
+}: {
+  orgName: string;
+  userName: string;
+  isSuperAdmin?: boolean;
+}) {
   const pathname = usePathname();
   const router = useRouter();
+  const navLinks = isSuperAdmin ? [...NAV_LINKS, { href: "/admin/orgs", label: "Admin" }] : NAV_LINKS;
 
   async function handleSignOut() {
     await authClient.signOut();
@@ -33,7 +42,7 @@ export function Sidebar({ orgName, userName }: { orgName: string; userName: stri
       </div>
 
       <nav className="flex-1 space-y-1 p-3">
-        {NAV_LINKS.map((link) => {
+        {navLinks.map((link) => {
           const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
           return (
             <Link

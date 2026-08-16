@@ -16,11 +16,11 @@ export async function GET(_req: Request, { params }: { params: Promise<{ documen
     }
 
     const { documentId } = await params;
-    const document = await db.document.findUnique({
-      where: { id: documentId },
+    const document = await db.document.findFirst({
+      where: { id: documentId, organizationId: user.organizationId },
       include: { _count: { select: { chunks: true } } },
     });
-    if (!document || document.organizationId !== user.organizationId) {
+    if (!document) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 });
     }
 
@@ -44,8 +44,10 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ docu
     }
 
     const { documentId } = await params;
-    const document = await db.document.findUnique({ where: { id: documentId } });
-    if (!document || document.organizationId !== user.organizationId) {
+    const document = await db.document.findFirst({
+      where: { id: documentId, organizationId: user.organizationId },
+    });
+    if (!document) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 });
     }
 
