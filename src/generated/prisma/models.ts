@@ -10,6 +10,7 @@
  */
 export type * from './models/User'
 export type * from './models/Organization'
+export type * from './models/OrgInvite'
 export type * from './models/Document'
 export type * from './models/Chunk'
 export type * from './models/UsageLog'

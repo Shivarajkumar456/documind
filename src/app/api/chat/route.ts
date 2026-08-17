@@ -17,8 +17,10 @@ export async function POST(req: Request) {
 
   const { messages, documentId }: { messages: UIMessage[]; documentId: string } = await req.json();
 
-  const document = await db.document.findUnique({ where: { id: documentId } });
-  if (!document || document.organizationId !== user.organizationId) {
+  const document = await db.document.findFirst({
+    where: { id: documentId, organizationId: user.organizationId },
+  });
+  if (!document) {
     return new Response("Document not found", { status: 404 });
   }
 
@@ -33,6 +35,8 @@ export async function POST(req: Request) {
   const queryEmbedding = await generateEmbedding(userText);
 
   // 2. Retrieve the 5 most semantically similar chunks
+  // Scoped by documentId only — safe because `document` above is already verified
+  // to belong to user.organizationId, so no cross-org join is needed here.
   const chunks = await db.$queryRaw<Array<{ content: string; chunkIndex: number; pageNumber: number | null }>>`
     SELECT content, "chunkIndex", "pageNumber"
     FROM "Chunk"

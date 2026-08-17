@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Organization: 'Organization',
+  OrgInvite: 'OrgInvite',
   Document: 'Document',
   Chunk: 'Chunk',
   UsageLog: 'UsageLog'
@@ -87,11 +88,26 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const OrganizationScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const OrgInviteScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  organizationId: 'organizationId',
+  invitedBy: 'invitedBy',
+  role: 'role',
+  accepted: 'accepted',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type OrgInviteScalarFieldEnum = (typeof OrgInviteScalarFieldEnum)[keyof typeof OrgInviteScalarFieldEnum]
 
 
 export const DocumentScalarFieldEnum = {

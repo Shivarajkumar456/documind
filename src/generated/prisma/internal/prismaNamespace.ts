@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Organization: 'Organization',
+  OrgInvite: 'OrgInvite',
   Document: 'Document',
   Chunk: 'Chunk',
   UsageLog: 'UsageLog'
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "organization" | "document" | "chunk" | "usageLog"
+    modelProps: "user" | "organization" | "orgInvite" | "document" | "chunk" | "usageLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -566,6 +567,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OrganizationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OrganizationCountAggregateOutputType> | number
+        }
+      }
+    }
+    OrgInvite: {
+      payload: Prisma.$OrgInvitePayload<ExtArgs>
+      fields: Prisma.OrgInviteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrgInviteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrgInviteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>
+        }
+        findFirst: {
+          args: Prisma.OrgInviteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrgInviteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>
+        }
+        findMany: {
+          args: Prisma.OrgInviteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>[]
+        }
+        create: {
+          args: Prisma.OrgInviteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>
+        }
+        createMany: {
+          args: Prisma.OrgInviteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OrgInviteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>[]
+        }
+        delete: {
+          args: Prisma.OrgInviteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>
+        }
+        update: {
+          args: Prisma.OrgInviteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>
+        }
+        deleteMany: {
+          args: Prisma.OrgInviteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrgInviteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OrgInviteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>[]
+        }
+        upsert: {
+          args: Prisma.OrgInviteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrgInvitePayload>
+        }
+        aggregate: {
+          args: Prisma.OrgInviteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrgInvite>
+        }
+        groupBy: {
+          args: Prisma.OrgInviteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrgInviteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrgInviteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrgInviteCountAggregateOutputType> | number
         }
       }
     }
@@ -843,11 +918,26 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const OrganizationScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const OrgInviteScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  organizationId: 'organizationId',
+  invitedBy: 'invitedBy',
+  role: 'role',
+  accepted: 'accepted',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type OrgInviteScalarFieldEnum = (typeof OrgInviteScalarFieldEnum)[keyof typeof OrgInviteScalarFieldEnum]
 
 
 export const DocumentScalarFieldEnum = {
@@ -958,6 +1048,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1169,6 +1266,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   organization?: Prisma.OrganizationOmit
+  orgInvite?: Prisma.OrgInviteOmit
   document?: Prisma.DocumentOmit
   chunk?: Prisma.ChunkOmit
   usageLog?: Prisma.UsageLogOmit
